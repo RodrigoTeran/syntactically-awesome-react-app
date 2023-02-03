@@ -10,7 +10,6 @@
 dist/
 coverage/
 configs/nginx
-docs/
 tools/
 
 *.env
