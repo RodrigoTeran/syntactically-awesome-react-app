@@ -109,7 +109,7 @@ function main() {
     FsExt.writeJsonSync(makePath(destination, 'package.json'), newPkg, { spaces: 2 })
 
     console.log(`Congratulations 🚀🚀🚀 You are ready! Follow the following commands to start:`);
-    console.log(`$ cd ${projectName}`);
+    console.log(`$ cd ${app}`);
     console.log(`$ npm install`);
     console.log(`$ npm run prepare`);
     console.log(`$ npm start`);
