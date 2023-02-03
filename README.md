@@ -62,6 +62,11 @@ npm run build
 **Cypress** is the testing framework for this project.  
 Check the [./cypress](cypress) configuration folder.
 
+## Docker
+
+SARA uses **Docker** to containerize this app
+Check the [Dockerfile](Dockerfile) configuration file.
+
 ## Linters and Code Style
 
 The mix of tools used to ensure code and commit style and best practices:
