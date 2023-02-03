@@ -27,6 +27,12 @@ Run the following command to install all the dependencies:
 $ npm i
 ```
 
+### Prepare git hooks
+
+```
+$ npm run prepare
+```
+
 ### Run the dev server
 
 ```
