@@ -50,76 +50,71 @@ const Templates = [
 
 const PkgFieldsToKeep = ['scripts', 'dependencies']
 
+function main() {
+    console.log('Syntactically Awesome React App 🚀 - Bootstrapping New Project')
 
-Inquirer.prompt(QUESTIONS).then(answers => {
-    const projectName = answers['project-name'];
+    const argv = process.argv.slice(2)
+    const argMap = new Map()
 
-    function main() {
-        console.log('Syntactically Awesome React App 🚀 - Bootstrapping New Project')
+    for (let i = 0; i < argv.length; i++) {
+        const arg = argv[i]
 
-        const argv = process.argv.slice(2)
-        const argMap = new Map()
+        if (/^--.+=/.test(arg)) {
+            const match = arg.match(/^--([^=]+)=([\s\S]*)$/)
+            const key = match[1]
+            const value = match[2]
 
-        for (let i = 0; i < argv.length; i++) {
-            const arg = argv[i]
+            argMap.set(key, value)
+        } else if (/^--.+/.test(arg)) {
+            const key = arg.match(/^--(.+)/)[1]
+            const next = argv[i + 1]
 
-            if (/^--.+=/.test(arg)) {
-                const match = arg.match(/^--([^=]+)=([\s\S]*)$/)
-                const key = match[1]
-                const value = match[2]
-
-                argMap.set(key, value)
-            } else if (/^--.+/.test(arg)) {
-                const key = arg.match(/^--(.+)/)[1]
-                const next = argv[i + 1]
-
-                argMap.set(key, next)
-            }
+            argMap.set(key, next)
         }
-
-        const source = makePath(__dirname, '../..')
-        const dest = paramOr(argMap, 'destination', process.cwd()).trim()
-        const app = paramOr(argMap, 'app', 'my-app').trim()
-        const destination = makePath(dest, app)
-
-        console.log(
-            `Summary:
-            Destination: ${destination}
-            App: ${app}`
-        )
-
-        console.log('Cloning the repository...')
-
-        FsExt.copySync(source, destination, { filter: ignoreContent(...Ignores.map(x => makePath(source, x))) })
-
-        console.log('Copying templates...')
-
-        Templates.forEach(x => FsExt.copySync(makePath(source, 'templates', x.file), makePath(destination, x.copyTo)))
-
-        console.log('Preparing package.json ...')
-
-        const pkg = FsExt.readJsonSync(makePath(source, 'package.json'))
-        const newPkg = {
-            name: app,
-            main: 'dist/index.js',
-        }
-
-        PkgFieldsToKeep.forEach(field => {
-            if (typeof pkg[field] !== 'undefined') {
-                newPkg[field] = pkg[field]
-            }
-        })
-
-        FsExt.writeJsonSync(makePath(destination, 'package.json'), newPkg, { spaces: 2 })
-
-        console.log(`Congratulations 🚀🚀🚀 You are ready! Follow the following commands to start:`);
-        console.log(`$ cd ${projectName}`);
-        console.log(`$ npm install`);
-        console.log(`$ npm run prepare`);
-        console.log(`$ npm start`);
-
-        return Promise.resolve()
     }
 
-    main().catch(console.error)
-});
+    const source = makePath(__dirname, '../..')
+    const dest = paramOr(argMap, 'destination', process.cwd()).trim()
+    const app = paramOr(argMap, 'app', 'my-app').trim()
+    const destination = makePath(dest, app)
+
+    console.log(
+        `Summary:
+        Destination: ${destination}
+        App: ${app}`
+    )
+
+    console.log('Cloning the repository...')
+
+    FsExt.copySync(source, destination, { filter: ignoreContent(...Ignores.map(x => makePath(source, x))) })
+
+    console.log('Copying templates...')
+
+    Templates.forEach(x => FsExt.copySync(makePath(source, 'templates', x.file), makePath(destination, x.copyTo)))
+
+    console.log('Preparing package.json ...')
+
+    const pkg = FsExt.readJsonSync(makePath(source, 'package.json'))
+    const newPkg = {
+        name: app,
+        main: 'dist/index.js',
+    }
+
+    PkgFieldsToKeep.forEach(field => {
+        if (typeof pkg[field] !== 'undefined') {
+            newPkg[field] = pkg[field]
+        }
+    })
+
+    FsExt.writeJsonSync(makePath(destination, 'package.json'), newPkg, { spaces: 2 })
+
+    console.log(`Congratulations 🚀🚀🚀 You are ready! Follow the following commands to start:`);
+    console.log(`$ cd ${projectName}`);
+    console.log(`$ npm install`);
+    console.log(`$ npm run prepare`);
+    console.log(`$ npm start`);
+
+    return Promise.resolve()
+}
+
+main().catch(console.error)

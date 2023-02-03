@@ -31,6 +31,28 @@
     "prepare": "husky install",
     "eject": "react-scripts eject"
   },
+  "keywords": [
+    "react",
+    "docker",
+    "template",
+    "boilerplate",
+    "typescript",
+    "front-end",
+    "clean-architecture",
+    "cypress",
+    "starter"
+  ],
+  "homepage": "https://github.com/RodrigoTeran/syntactically-awesome-react-app/",
+  "bugs": "https://github.com/RodrigoTeran/syntactically-awesome-react-app/issues",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:RodrigoTeran/syntactically-awesome-react-app.git"
+  },
+  "author": {
+    "name": "Rodrigo Teran Hernandez",
+    "email": "rodrigo.teranhernandez@gmail.com",
+    "url": "https://github.com/RodrigoTeran"
+  },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": "eslint --cache --fix",
     "src/**/*.{js,jsx,ts,tsx,css,scss,md}": "prettier --write --ignore-unknown"
