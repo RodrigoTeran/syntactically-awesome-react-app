@@ -16,7 +16,7 @@ const runCommand = command => {
     try {
         execSync(`${command}, {stdio: "inherit"}`)
     } catch (e) {
-        console.error(`Failed to execute ${command}, e`);
+        console.error(`Failed to execute ${command}, ${e}`);
         return false;
     }
     return true;
@@ -102,7 +102,7 @@ function main() {
 
     Templates.forEach(x => FsExt.copySync(makePath(source, 'templates', x.file), makePath(destination, x.copyTo)))
 
-    console.log('Preparing package.json ...')
+    console.log('Preparing package.json...')
 
     const pkg = FsExt.readJsonSync(makePath(source, 'package.json'))
     const newPkg = {
@@ -118,9 +118,14 @@ function main() {
 
     FsExt.writeJsonSync(makePath(destination, 'package.json'), newPkg, { spaces: 2 })
 
-    const npmI = runCommand("npm install");
+
+    console.log('Installing dependencies...')
+
+    const npmI = runCommand(`cd ${app} && npm install`);
     if (!npmI) process.exit(-1);
     
+    console.log('Preparing git hooks...')
+
     const npmPrepare = runCommand("npm run prepare");
     if (!npmPrepare) process.exit(-1);
     
