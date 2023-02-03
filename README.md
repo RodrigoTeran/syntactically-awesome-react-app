@@ -73,7 +73,7 @@ The mix of tools used to ensure code and commit style and best practices:
 
 - ESLint
 - Prettier
-- Commitlint
+- [Commitlint](https://github.com/conventional-changelog/commitlint)
 - Lint Staged
 - Husky
 
