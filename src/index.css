@@ -3,25 +3,25 @@
 @tailwind utilities;
 
 * {
-  box-sizing: border-box;
-  font-family: "Open Sans", sans-serif;
+	box-sizing: border-box;
+	font-family: 'Open Sans', sans-serif;
 }
 
 html {
-  min-height: 100%;
-  width: 100vw;
-  position: relative;
+	min-height: 100%;
+	width: 100vw;
+	position: relative;
 }
 
 body {
-  position: relative;
-  overflow-x: hidden;
-  margin: 0;
-  padding: 0;
-  width: 100vw;
-  height: 100%;
-  top: 0;
-  left: 0;
-  background-color: var(--black-300);
-  color: var(--white-100);
+	position: relative;
+	overflow-x: hidden;
+	margin: 0;
+	padding: 0;
+	width: 100vw;
+	height: 100%;
+	top: 0;
+	left: 0;
+	background-color: var(--black-300);
+	color: var(--white-100);
 }
