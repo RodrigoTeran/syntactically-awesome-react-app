@@ -1,29 +1,14 @@
 #!/usr/bin/env node
 
 const Path = require('path')
-const Inquirer = require('inquirer')
 const FsExt = require('fs-extra')
 
+const paramOr = (map, arg, def) => map.get(arg) || def
 const makePath = (...p) => Path.join(...p)
 const ignoreContent =
     (...values) =>
         source =>
             !values.some(x => source === x)
-
-
-const QUESTIONS = [
-    {
-        name: 'project-name',
-        type: 'input',
-        message: 'Project name:',
-        validate: function (input) {
-            if (/^([A-Za-z\-\\_\d])+$/.test(input)) return true;
-            else return 'Project name may only include letters, numbers, underscores and hashes.';
-        },
-    },
-];
-
-
 
 const Ignores = [
     '.git',
@@ -35,18 +20,25 @@ const Ignores = [
     '.yarn/build-state.yml',
     '.yarn/install-state.gz',
     'bin',
+    'config/nginx',
     'coverage',
     'dist',
     'docs',
     'node_modules',
+    'scripts',
+    'templates',
+    'tools',
+    '.dockerignore',
     '.npmignore',
     '.env',
     'CONTRIBUTING.md',
     'CHANGELOG.md',
+    'CODE_OF_CONDUCT.md',
     'README.md',
+    'Makefile',
     'package.json',
     'package-lock.json',
-    'yarn.lock',
+    'yarn.lock'
 ]
 
 const Templates = [
@@ -65,9 +57,29 @@ Inquirer.prompt(QUESTIONS).then(answers => {
     function main() {
         console.log('Syntactically Awesome React App 🚀 - Bootstrapping New Project')
 
+        const argv = process.argv.slice(2)
+        const argMap = new Map()
+
+        for (let i = 0; i < argv.length; i++) {
+            const arg = argv[i]
+
+            if (/^--.+=/.test(arg)) {
+                const match = arg.match(/^--([^=]+)=([\s\S]*)$/)
+                const key = match[1]
+                const value = match[2]
+
+                argMap.set(key, value)
+            } else if (/^--.+/.test(arg)) {
+                const key = arg.match(/^--(.+)/)[1]
+                const next = argv[i + 1]
+
+                argMap.set(key, next)
+            }
+        }
+
         const source = makePath(__dirname, '../..')
-        const dest = process.cwd()
-        const app = projectName
+        const dest = paramOr(argMap, 'destination', process.cwd()).trim()
+        const app = paramOr(argMap, 'app', 'my-app').trim()
         const destination = makePath(dest, app)
 
         console.log(
