@@ -10,33 +10,20 @@ Check the **scripts** section of your _package.json_.
 
 
 ```
-$ cd <app_name>
-$ npm install
-```
-
-### Prepare git hooks
-then you need to prepare the git hooks
-
-```
-$ npm run prepare
-```
-
-### Run the dev server
-
-```
-$ npm start
+cd <app_name>
+npm start
 ```
 
 ### Open cypress 
 
 ```
-$ npm run cypress:open
+npm run cypress:open
 ```
 
 ### Run cypress tests
 
 ```
-$ npm test
+npm test
 ```
 
 ### Build

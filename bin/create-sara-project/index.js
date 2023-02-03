@@ -2,6 +2,7 @@
 
 const Path = require('path')
 const FsExt = require('fs-extra')
+const { execSync } = require("child_process");
 
 const paramOr = (map, arg, def) => map.get(arg) || def
 const makePath = (...p) => Path.join(...p)
@@ -9,6 +10,17 @@ const ignoreContent =
     (...values) =>
         source =>
             !values.some(x => source === x)
+
+
+const runCommand = command => {
+    try {
+        execSync(`${command}, {stdio: "inherit"}`)
+    } catch (e) {
+        console.error(`Failed to execute ${command}, e`);
+        return false;
+    }
+    return true;
+}
 
 const Ignores = [
     '.git',
@@ -48,7 +60,7 @@ const Templates = [
     { file: '.gitignore.root', copyTo: '.gitignore' },
 ]
 
-const PkgFieldsToKeep = ['scripts', 'dependencies']
+const PkgFieldsToKeep = ['scripts', 'dependencies', 'lint-staged', 'eslintConfig', 'browserslist', 'devDependencies']
 
 function main() {
     console.log('Syntactically Awesome React App 🚀 - Bootstrapping New Project')
@@ -78,11 +90,9 @@ function main() {
     const app = paramOr(argMap, 'app', 'my-app').trim()
     const destination = makePath(dest, app)
 
-    console.log(
-        `Summary:
-        Destination: ${destination}
-        App: ${app}`
-    )
+    console.log("Summary:")
+    console.log(`Destination: ${destination}`)
+    console.log(`App: ${app}`)
 
     console.log('Cloning the repository...')
 
@@ -108,11 +118,24 @@ function main() {
 
     FsExt.writeJsonSync(makePath(destination, 'package.json'), newPkg, { spaces: 2 })
 
+    const npmI = runCommand("npm install");
+    if (!npmI) process.exit(-1);
+    
+    const npmPrepare = runCommand("npm run prepare");
+    if (!npmPrepare) process.exit(-1);
+    
+    const huskyCommitMsg = runCommand(`npx husky add .husky/commit-msg 'npx --no-install commitlint --edit "$1"'`);
+    if (!huskyCommitMsg) process.exit(-1);
+    
+    const huskyPreCommit = runCommand(`npx husky add .husky/pre-commit 'npx lint-staged'`);
+    if (!huskyPreCommit) process.exit(-1);
+    
+    const huskyPrepush = runCommand(`npx husky add .husky/pre-push 'npm run test'`);
+    if (!huskyPrepush) process.exit(-1);
+
     console.log(`Congratulations 🚀🚀🚀 You are ready! Follow the following commands to start:`);
-    console.log(`$ cd ${app}`);
-    console.log(`$ npm install`);
-    console.log(`$ npm run prepare`);
-    console.log(`$ npm start`);
+    console.log(`cd ${app}`);
+    console.log(`npm start`);
 
     return Promise.resolve()
 }
