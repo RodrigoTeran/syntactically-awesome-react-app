@@ -27,7 +27,7 @@ Run the following command to install all the dependencies:
 $ npm i
 ```
 
-### Run the Dev Server
+### Run the dev server
 
 ```
 $ npm start
