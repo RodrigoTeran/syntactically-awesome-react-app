@@ -8,7 +8,14 @@ Also, run **npm run prepare** to install dependencies and initialize git hooks.
 ## Useful Scripts
 Check the **scripts** section of your _package.json_.
 
+
+```
+$ cd <app_name>
+$ npm install
+```
+
 ### Prepare git hooks
+then you need to prepare the git hooks
 
 ```
 $ npm run prepare

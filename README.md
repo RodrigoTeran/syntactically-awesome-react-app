@@ -21,13 +21,30 @@
 ### Dependencies
 
 **NPM** is the project package manager.  
-Run the following command to install all the dependencies:
+Run the following command to install create-sara-project globally
 
 ```
-$ npm i
+$ npm i create-sara-project -g
+```
+
+### Then you can go to your project folder and run:
+
+```
+$ create-sara-project --app=<app_name>
+```
+
+if you don't specify the app name it is going to create it with the name "my-app"
+
+### Once you created a sara project...
+you need to install the dependencies:
+
+```
+$ cd <app_name>
+$ npm install
 ```
 
 ### Prepare git hooks
+then you need to prepare the git hooks
 
 ```
 $ npm run prepare
