@@ -58,7 +58,7 @@ const Templates = [
 
 const PkgFieldsToKeep = ['scripts', 'dependencies', 'lint-staged', 'eslintConfig', 'browserslist', 'devDependencies']
 
-function main() {
+const main = new Promise((resolve) => {
     console.log('Syntactically Awesome React App 🚀 - Bootstrapping New Project')
 
     const argv = process.argv.slice(2)
@@ -114,40 +114,43 @@ function main() {
 
     FsExt.writeJsonSync(makePath(destination, 'package.json'), newPkg, { spaces: 2 })
 
+    resolve(app);
+});
 
-    console.log('Installing dependencies...')
+main
+    .then((app) => {
+        console.log('Installing dependencies...')
 
-    console.log(`Process: ${process.cwd()}`);
-    
-    const cd = runCommand(`cd ${app}`);
-    if (!cd) process.exit(-1);
+        console.log(`Process: ${process.cwd()}`);
 
-    console.log(`Process: ${process.cwd()}`);
-    
-    const npmI = runCommand(`npm install`);
-    if (!npmI) process.exit(-1);
-    
-    console.log(`Process: ${process.cwd()}`);
-    
-    console.log('Preparing git hooks...')
+        const cd = runCommand(`cd ${app}`);
+        if (!cd) process.exit(-1);
 
-    const npmPrepare = runCommand("npm run prepare");
-    if (!npmPrepare) process.exit(-1);
-    
-    const huskyCommitMsg = runCommand(`npx husky add .husky/commit-msg 'npx --no-install commitlint --edit "$1"'`);
-    if (!huskyCommitMsg) process.exit(-1);
-    
-    const huskyPreCommit = runCommand(`npx husky add .husky/pre-commit 'npx lint-staged'`);
-    if (!huskyPreCommit) process.exit(-1);
-    
-    const huskyPrepush = runCommand(`npx husky add .husky/pre-push 'npm run test'`);
-    if (!huskyPrepush) process.exit(-1);
+        console.log(`Process: ${process.cwd()}`);
 
-    console.log(`Congratulations 🚀🚀🚀 You are ready! Follow the following commands to start:`);
-    console.log(`cd ${app}`);
-    console.log(`npm start`);
+        const npmI = runCommand(`npm install`);
+        if (!npmI) process.exit(-1);
 
-    return Promise.resolve()
-}
+        console.log(`Process: ${process.cwd()}`);
 
-main().catch(console.error)
+        console.log('Preparing git hooks...')
+
+        const npmPrepare = runCommand("npm run prepare");
+        if (!npmPrepare) process.exit(-1);
+
+        const huskyCommitMsg = runCommand(`npx husky add .husky/commit-msg 'npx --no-install commitlint --edit "$1"'`);
+        if (!huskyCommitMsg) process.exit(-1);
+
+        const huskyPreCommit = runCommand(`npx husky add .husky/pre-commit 'npx lint-staged'`);
+        if (!huskyPreCommit) process.exit(-1);
+
+        const huskyPrepush = runCommand(`npx husky add .husky/pre-push 'npm run test'`);
+        if (!huskyPrepush) process.exit(-1);
+
+        console.log(`Congratulations 🚀🚀🚀 You are ready! Follow the following commands to start:`);
+        console.log(`cd ${app}`);
+        console.log(`npm start`);
+    }).catch((error) => {
+        console.error("Error in create-sara-app");
+        console.error(error);
+    });
