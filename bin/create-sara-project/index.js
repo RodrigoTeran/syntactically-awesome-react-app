@@ -106,7 +106,7 @@ const main = new Promise((resolve) => {
     const pkg = FsExt.readJsonSync(makePath(source, 'package.json'))
     const newPkg = {
         name: app,
-        main: 'dist/index.js',
+        main: 'build/index.js'
     }
 
     PkgFieldsToKeep.forEach(field => {
@@ -145,6 +145,6 @@ main
         console.log(`cd ${app}`);
         console.log(`npm start`);
     }).catch((error) => {
-        console.error("Error in create-sara-app");
+        console.error("Error in create-sara-project");
         console.error(error);
     });

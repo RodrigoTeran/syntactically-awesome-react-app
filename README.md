@@ -30,7 +30,7 @@ npm i create-sara-project -g
 ### Then you can go to your project folder and run:
 
 ```
-create-sara-app --app=<app_name>
+create-sara-project --app=<app_name>
 ```
 
 if you don't specify the app name it is going to create it with the name "my-app"
