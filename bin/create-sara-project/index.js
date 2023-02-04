@@ -24,23 +24,28 @@ const runCommand = command => {
     return true;
 }
 
+const runCommandNoLogs = command => {
+    try {
+        execSync(`${command}`, {
+            shell: "/bin/bash"
+        })
+    } catch (e) {
+        console.error(`Failed to execute ${command} => ${e}`);
+        return false;
+    }
+    return true;
+}
+
 const Ignores = [
     '.git',
-    '.idea',
     '.vscode',
     '.github',
     '.husky/_',
-    '.yarn/cache',
-    '.yarn/build-state.yml',
-    '.yarn/install-state.gz',
     'bin',
-    'config/nginx',
-    'coverage',
     'build',
     'docs',
     'node_modules',
     'templates',
-    'tools',
     '.npmignore',
     '.env',
     'CONTRIBUTING.md',
@@ -122,8 +127,19 @@ const main = new Promise((resolve) => {
 
 main
     .then((app) => {
+        console.log(`Initializing repository... for ${app}`);
+
+        const gitInit = runCommandNoLogs(`cd ${app} && git init -b main`);
+        if (!gitInit) process.exit(-1);
+
+        const gitAdd = runCommandNoLogs(`cd ${app} && git add .`);
+        if (!gitAdd) process.exit(-1);
+
+        const gitCommit = runCommandNoLogs(`cd ${app} && git commit -m "Initialize project using create-sara-project"`);
+        if (!gitCommit) process.exit(-1);
+
         console.log(`Installing dependencies... for ${app}`);
-        
+
         const npmI = runCommand(`cd ${app} && npm install`);
         if (!npmI) process.exit(-1);
 
@@ -131,15 +147,6 @@ main
 
         const npmPrepare = runCommand(`cd ${app} && npm run prepare`);
         if (!npmPrepare) process.exit(-1);
-
-        const huskyCommitMsg = runCommand(`cd ${app} && npx husky add .husky/commit-msg 'npx --no-install commitlint --edit "$1"'`);
-        if (!huskyCommitMsg) process.exit(-1);
-
-        const huskyPreCommit = runCommand(`cd ${app} && npx husky add .husky/pre-commit 'npx lint-staged'`);
-        if (!huskyPreCommit) process.exit(-1);
-
-        const huskyPrepush = runCommand(`cd ${app} && npx husky add .husky/pre-push 'npm run test'`);
-        if (!huskyPrepush) process.exit(-1);
 
         console.log(`Congratulations 🚀🚀🚀 You are ready! Follow the following commands to start:`);
         console.log(`cd ${app}`);
