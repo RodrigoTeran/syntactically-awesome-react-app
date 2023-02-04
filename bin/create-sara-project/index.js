@@ -13,7 +13,10 @@ const ignoreContent =
 
 const runCommand = command => {
     try {
-        execSync(`${command}, {stdio: "inherit"}`)
+        execSync(`${command}`, {
+            stdio: "inherit",
+            shell: "/bin/bash"
+        })
     } catch (e) {
         console.error(`Failed to execute ${command} => ${e}`);
         return false;
@@ -119,32 +122,23 @@ const main = new Promise((resolve) => {
 
 main
     .then((app) => {
-        console.log('Installing dependencies...')
-
-        console.log(`Process: ${process.cwd()}`);
-
-        const cd = runCommand(`cd ${app}`);
-        if (!cd) process.exit(-1);
-
-        console.log(`Process: ${process.cwd()}`);
-
-        const npmI = runCommand(`npm install`);
+        console.log(`Installing dependencies... for ${app}`);
+        
+        const npmI = runCommand(`cd ${app} && npm install`);
         if (!npmI) process.exit(-1);
-
-        console.log(`Process: ${process.cwd()}`);
 
         console.log('Preparing git hooks...')
 
-        const npmPrepare = runCommand("npm run prepare");
+        const npmPrepare = runCommand(`cd ${app} && npm run prepare`);
         if (!npmPrepare) process.exit(-1);
 
-        const huskyCommitMsg = runCommand(`npx husky add .husky/commit-msg 'npx --no-install commitlint --edit "$1"'`);
+        const huskyCommitMsg = runCommand(`cd ${app} && npx husky add .husky/commit-msg 'npx --no-install commitlint --edit "$1"'`);
         if (!huskyCommitMsg) process.exit(-1);
 
-        const huskyPreCommit = runCommand(`npx husky add .husky/pre-commit 'npx lint-staged'`);
+        const huskyPreCommit = runCommand(`cd ${app} && npx husky add .husky/pre-commit 'npx lint-staged'`);
         if (!huskyPreCommit) process.exit(-1);
 
-        const huskyPrepush = runCommand(`npx husky add .husky/pre-push 'npm run test'`);
+        const huskyPrepush = runCommand(`cd ${app} && npx husky add .husky/pre-push 'npm run test'`);
         if (!huskyPrepush) process.exit(-1);
 
         console.log(`Congratulations 🚀🚀🚀 You are ready! Follow the following commands to start:`);

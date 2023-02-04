@@ -1,6 +1,6 @@
 {
   "name": "create-sara-project",
-  "version": "1.0.9",
+  "version": "1.0.14",
   "main": "bin/create-sara-project/index.js",
   "bin": {
     "create-sara-app": "bin/create-sara-project/index.js"
