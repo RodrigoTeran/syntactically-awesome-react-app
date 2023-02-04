@@ -11,12 +11,11 @@ const ignoreContent =
         source =>
             !values.some(x => source === x)
 
-
 const runCommand = command => {
     try {
         execSync(`${command}, {stdio: "inherit"}`)
     } catch (e) {
-        console.error(`Failed to execute ${command}, ${e}`);
+        console.error(`Failed to execute ${command} => ${e}`);
         return false;
     }
     return true;
@@ -34,20 +33,17 @@ const Ignores = [
     'bin',
     'config/nginx',
     'coverage',
-    'dist',
+    'build',
     'docs',
     'node_modules',
-    'scripts',
     'templates',
     'tools',
-    '.dockerignore',
     '.npmignore',
     '.env',
     'CONTRIBUTING.md',
     'CHANGELOG.md',
     'CODE_OF_CONDUCT.md',
     'README.md',
-    'Makefile',
     'package.json',
     'package-lock.json',
     'yarn.lock'
@@ -121,8 +117,17 @@ function main() {
 
     console.log('Installing dependencies...')
 
-    const npmI = runCommand(`cd ${app} && npm install`);
+    console.log(`Process: ${process.cwd()}`);
+    
+    const cd = runCommand(`cd ${app}`);
+    if (!cd) process.exit(-1);
+
+    console.log(`Process: ${process.cwd()}`);
+    
+    const npmI = runCommand(`npm install`);
     if (!npmI) process.exit(-1);
+    
+    console.log(`Process: ${process.cwd()}`);
     
     console.log('Preparing git hooks...')
 

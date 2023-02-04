@@ -1,6 +1,6 @@
 {
   "name": "create-sara-project",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "main": "bin/create-sara-project/index.js",
   "bin": {
     "create-sara-app": "bin/create-sara-project/index.js"
@@ -27,7 +27,7 @@
     "build": "react-scripts build",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "test": "start-server-and-test start http-get://localhost:3000 cypress:run",
+    "test": "npm run cypress:run",
     "prepare": "husky install",
     "eject": "react-scripts eject"
   },
@@ -53,6 +53,7 @@
     "email": "rodrigo.teranhernandez@gmail.com",
     "url": "https://github.com/RodrigoTeran"
   },
+  "license": "MIT",
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": "eslint --cache --fix",
     "src/**/*.{js,jsx,ts,tsx,css,scss,md}": "prettier --write --ignore-unknown"
