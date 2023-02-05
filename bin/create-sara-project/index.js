@@ -62,6 +62,7 @@ const Templates = [
     { file: 'README.md', copyTo: 'README.md' },
     { file: '.gitignore.husky', copyTo: '.husky/.gitignore' },
     { file: '.gitignore.root', copyTo: '.gitignore' },
+    { file: '.gitignore.cypress', copyTo: 'cypress/.gitignore' },
 ]
 
 const PkgFieldsToKeep = ['scripts', 'dependencies', 'lint-staged', 'eslintConfig', 'browserslist', 'devDependencies']
