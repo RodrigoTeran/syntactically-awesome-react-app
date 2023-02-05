@@ -6,7 +6,8 @@
     <img src="https://img.shields.io/npm/v/create-sara-project?color=ff69b4" alt="version" /> &nbsp;
     <img src="https://img.shields.io/npm/dw/create-sara-project?color=05BB17" alt="downloads" /> &nbsp;
     <img src="https://img.shields.io/github/issues/RodrigoTeran/syntactically-awesome-react-app?color=18C6D1" alt="issues" /> &nbsp;
-    <img src="https://img.shields.io/npm/l/create-sara-project?color=EF821E" alt="license" />
+    <img src="https://img.shields.io/npm/l/create-sara-project?color=EF821E" alt="license" /> &nbsp;
+    <img src="https://img.shields.io/github/actions/workflow/status/RodrigoTeran/syntactically-awesome-react-app/main.yml" alt="github actions" />
     <br>
     <i>Template for <strong>React Apps</strong> using <strong>TypeScript</strong> obviously...</i>
 </p>
@@ -21,18 +22,47 @@
     in the other hand... this is a personal project 🙃. I hope this template can help at least someone to bootstrap their react projects. 🚀🚀🚀
 </p>
 
-## Getting Started
+# Getting Started
 
-### Dependencies
+## Dependencies
 
 **NPM** is the project package manager.  
+
+Because ```create-sara-project``` has a lot of configurations, we have tested the app with this environment versions:
+
+```
+npm@8.9.0
+```
+
+```
+node@v16.17.1
+```
+
+```
+git@2.28.0
+```
+
+If something is not working, try to update to these specific versions...
+
+## Update package
+If you have previously installed:
+```
+npm i create-sara-project -g
+```
+
+and you want to update it, run:
+```
+npm update create-sara-project -g
+```
+# Commands
+## Install
 Run the following command to install create-sara-project globally
 
 ```
 npm i create-sara-project -g
 ```
 
-### Then you can go to your project folder and run:
+## Then you can go to your project folder and run:
 
 ```
 create-sara-project --app=<app_name>
@@ -40,7 +70,7 @@ create-sara-project --app=<app_name>
 
 if you don't specify the app name it is going to create it with the name "my-app"
 
-### Once you created a sara project...
+## Once you created a sara project...
 you can run the development server:
 
 ```
@@ -48,35 +78,35 @@ cd <app_name>
 npm start
 ```
 
-### Open cypress 
+## Open cypress 
 
 ```
 npm run cypress:open
 ```
 
-### Run cypress tests
+## Run cypress tests
 
 ```
 npm test
 ```
 
-### Build
+## Build
 
 ```
 npm run build
 ```
 
-## Test
+# Test
 
 **Cypress** is the testing framework for this project.  
 Check the [./cypress](cypress) configuration folder.
 
-## Docker
+# Docker
 
 SARA uses **Docker** to containerize this app
 Check the [Dockerfile](Dockerfile) configuration file.
 
-## Linters and Code Style
+# Linters and Code Style
 
 The mix of tools used to ensure code and commit style and best practices:
 
@@ -86,7 +116,7 @@ The mix of tools used to ensure code and commit style and best practices:
 - Lint Staged
 - Husky
 
-## Template structure 
+# Template structure 
 
 ```python
 .
