@@ -137,6 +137,9 @@ main
         const gitAdd = runCommandNoLogs(`cd ${app} && git add .`);
         if (!gitAdd) process.exit(-1);
         
+        const gitCommit = runCommandNoLogs(`cd ${app} && git commit -m "Initialize project using create-sara-project"`);
+        if (!gitCommit) process.exit(-1);
+        
         console.log(`Installing dependencies... for ${app}`);
         
         const npmI = runCommand(`cd ${app} && npm install`);
@@ -147,8 +150,6 @@ main
         const npmPrepare = runCommand(`cd ${app} && npm run prepare`);
         if (!npmPrepare) process.exit(-1);
 
-        const gitCommit = runCommandNoLogs(`cd ${app} && git commit -m "Initialize project using create-sara-project"`);
-        if (!gitCommit) process.exit(-1);
 
         console.log(`Congratulations 🚀🚀🚀 You are ready! Follow the following commands to start:`);
         console.log(`cd ${app}`);
