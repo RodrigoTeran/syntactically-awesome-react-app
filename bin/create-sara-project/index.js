@@ -52,6 +52,7 @@ const Ignores = [
     'CHANGELOG.md',
     'CODE_OF_CONDUCT.md',
     'README.md',
+    'LICENSE',
     'package.json',
     'package-lock.json',
     'yarn.lock'
@@ -135,19 +136,19 @@ main
 
         const gitAdd = runCommandNoLogs(`cd ${app} && git add .`);
         if (!gitAdd) process.exit(-1);
+        
+        console.log(`Installing dependencies... for ${app}`);
+        
+        const npmI = runCommand(`cd ${app} && npm install`);
+        if (!npmI) process.exit(-1);
+        
+        console.log('Preparing git hooks...')
+        
+        const npmPrepare = runCommand(`cd ${app} && npm run prepare`);
+        if (!npmPrepare) process.exit(-1);
 
         const gitCommit = runCommandNoLogs(`cd ${app} && git commit -m "Initialize project using create-sara-project"`);
         if (!gitCommit) process.exit(-1);
-
-        console.log(`Installing dependencies... for ${app}`);
-
-        const npmI = runCommand(`cd ${app} && npm install`);
-        if (!npmI) process.exit(-1);
-
-        console.log('Preparing git hooks...')
-
-        const npmPrepare = runCommand(`cd ${app} && npm run prepare`);
-        if (!npmPrepare) process.exit(-1);
 
         console.log(`Congratulations 🚀🚀🚀 You are ready! Follow the following commands to start:`);
         console.log(`cd ${app}`);
