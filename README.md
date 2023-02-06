@@ -6,8 +6,7 @@
     <img src="https://img.shields.io/npm/v/create-sara-project?color=ff69b4" alt="version" /> &nbsp;
     <img src="https://img.shields.io/npm/dw/create-sara-project?color=05BB17" alt="downloads" /> &nbsp;
     <img src="https://img.shields.io/github/issues/RodrigoTeran/syntactically-awesome-react-app?color=18C6D1" alt="issues" /> &nbsp;
-    <img src="https://img.shields.io/npm/l/create-sara-project?color=EF821E" alt="license" /> &nbsp;
-    <img src="https://img.shields.io/github/actions/workflow/status/RodrigoTeran/syntactically-awesome-react-app/main.yml" alt="github actions" />
+    <img src="https://img.shields.io/npm/l/create-sara-project?color=EF821E" alt="license" />
     <br>
     <i>Template for <strong>React Apps</strong> using <strong>TypeScript</strong> obviously...</i>
 </p>
