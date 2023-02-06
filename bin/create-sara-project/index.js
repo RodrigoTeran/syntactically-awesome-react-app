@@ -1,116 +1,58 @@
 #!/usr/bin/env node
 
-const Path = require('path')
-const FsExt = require('fs-extra')
-const { execSync } = require("child_process");
+const TEST_DIR = "/Users/rodrigoteranhernandez/Documents/Me/jepe";
 
-const paramOr = (map, arg, def) => map.get(arg) || def
-const makePath = (...p) => Path.join(...p)
-const ignoreContent =
-    (...values) =>
-        source =>
-            !values.some(x => source === x)
+const { copySync, readJsonSync, writeJsonSync } = require('fs-extra');
+const chalk = require("chalk");
+const {
+    Ignores,
+    Templates,
+    PkgFieldsToKeep,
+    appNameQuestion,
+    templateTypeQuestion,
+    emptyTemplate,
+    exampleTemplate,
+} = require("./config");
+const {
+    questions,
+    makePath,
+    ignoreContent,
+    runCommand,
+    runCommandNoLogs,
+} = require("./utils");
 
-const runCommand = command => {
-    try {
-        execSync(`${command}`, {
-            stdio: "inherit",
-            shell: "/bin/bash"
-        })
-    } catch (e) {
-        console.error(`Failed to execute ${command} => ${e}`);
-        return false;
+const copyApp = async (answers) => {
+    console.log(chalk.magenta.bold('\nSyntactically Awesome React App 🚀 - Bootstrapping New Project\n'));
+
+    const source = makePath(__dirname, '../..');
+    // const dest = process.cwd().trim()
+    const dest = TEST_DIR; // TODO: just for text... remove this
+    const app = answers[appNameQuestion].trim();
+    const template = answers[templateTypeQuestion];
+    const destination = makePath(dest, app);
+
+    console.log(chalk.cyan.bold('→ create-sara-project') + " " + 'Cloning the repository...');
+    copySync(source, destination, { filter: ignoreContent(...Ignores.map(x => makePath(source, x))) });
+    
+    console.log("Cloned https://github.com/RodrigoTeran/syntactically-awesome-react-app");
+
+    console.log(chalk.cyan.bold('→ create-sara-project') + " " + 'Copying templates...');
+
+    Templates.forEach(x => copySync(makePath(source, 'templates', x.file), makePath(destination, x.copyTo)));
+
+    // Copy desire template
+    if (template === emptyTemplate) {
+        copySync(makePath(source, 'templates', "src_v1"), makePath(destination, "src"));
+    } else if (template === exampleTemplate) {
+        copySync(makePath(source, 'templates', "src_v2"), makePath(destination, "src"));
+    } else {
+        console.error(chalk.red.bold("Error while copying template:", error));
+        process.exit(-1);
     }
-    return true;
-}
+    console.log(chalk.cyan.bold("Template") + " " + template);
 
-const runCommandNoLogs = command => {
-    try {
-        execSync(`${command}`, {
-            shell: "/bin/bash"
-        })
-    } catch (e) {
-        console.error(`Failed to execute ${command} => ${e}`);
-        return false;
-    }
-    return true;
-}
-
-const Ignores = [
-    '.git',
-    '.vscode',
-    '.github',
-    '.husky/_',
-    'bin',
-    'build',
-    'docs',
-    'node_modules',
-    'templates',
-    '.npmignore',
-    '.env',
-    'CONTRIBUTING.md',
-    'CHANGELOG.md',
-    'CODE_OF_CONDUCT.md',
-    'README.md',
-    'LICENSE',
-    'package.json',
-    'package-lock.json',
-    'yarn.lock'
-]
-
-const Templates = [
-    { file: 'ci.yml', copyTo: '.github/workflows/ci.yml' },
-    { file: 'README.md', copyTo: 'README.md' },
-    { file: '.gitignore.husky', copyTo: '.husky/.gitignore' },
-    { file: '.gitignore.root', copyTo: '.gitignore' },
-    { file: '.gitignore.cypress', copyTo: 'cypress/.gitignore' },
-]
-
-const PkgFieldsToKeep = ['scripts', 'dependencies', 'lint-staged', 'eslintConfig', 'browserslist', 'devDependencies']
-
-const main = new Promise((resolve) => {
-    console.log('Syntactically Awesome React App 🚀 - Bootstrapping New Project')
-
-    const argv = process.argv.slice(2)
-    const argMap = new Map()
-
-    for (let i = 0; i < argv.length; i++) {
-        const arg = argv[i]
-
-        if (/^--.+=/.test(arg)) {
-            const match = arg.match(/^--([^=]+)=([\s\S]*)$/)
-            const key = match[1]
-            const value = match[2]
-
-            argMap.set(key, value)
-        } else if (/^--.+/.test(arg)) {
-            const key = arg.match(/^--(.+)/)[1]
-            const next = argv[i + 1]
-
-            argMap.set(key, next)
-        }
-    }
-
-    const source = makePath(__dirname, '../..')
-    const dest = paramOr(argMap, 'destination', process.cwd()).trim()
-    const app = paramOr(argMap, 'app', 'my-app').trim()
-    const destination = makePath(dest, app)
-
-    console.log("Summary:")
-    console.log(`Destination: ${destination}`)
-    console.log(`App: ${app}`)
-
-    console.log('Cloning the repository...')
-
-    FsExt.copySync(source, destination, { filter: ignoreContent(...Ignores.map(x => makePath(source, x))) })
-
-    console.log('Copying templates...')
-
-    Templates.forEach(x => FsExt.copySync(makePath(source, 'templates', x.file), makePath(destination, x.copyTo)))
-
-    console.log('Preparing package.json...')
-
-    const pkg = FsExt.readJsonSync(makePath(source, 'package.json'))
+    console.log(chalk.cyan.bold('→ create-sara-project') + " " + 'Preparing package.json...');
+    const pkg = readJsonSync(makePath(source, 'package.json'))
     const newPkg = {
         name: app,
         main: 'build/index.js'
@@ -122,39 +64,62 @@ const main = new Promise((resolve) => {
         }
     })
 
-    FsExt.writeJsonSync(makePath(destination, 'package.json'), newPkg, { spaces: 2 })
+    writeJsonSync(makePath(destination, 'package.json'), newPkg, { spaces: 2 })
 
-    resolve(app);
-});
+    return app;
+};
 
-main
-    .then((app) => {
-        console.log(`Initializing repository... for ${app}`);
+const installApp = async (app) => {
+    try {
+        console.log(chalk.cyan.bold('→ create-sara-project') + " " + chalk.magenta.bold("git:(") + chalk.red.bold("main") + chalk.magenta.bold(")") + " " + "git init -b main");
 
-        const gitInit = runCommandNoLogs(`cd ${app} && git init -b main`);
+        // const gitInit = runCommandNoLogs(`cd ${app} && git init -b main`);
+        const gitInit = runCommandNoLogs(`cd ${TEST_DIR}/${app} && git init -b main`);
         if (!gitInit) process.exit(-1);
 
-        const gitAdd = runCommandNoLogs(`cd ${app} && git add .`);
-        if (!gitAdd) process.exit(-1);
-        
-        const gitCommit = runCommandNoLogs(`cd ${app} && git commit -m "Initialize project using create-sara-project"`);
-        if (!gitCommit) process.exit(-1);
-        
-        console.log(`Installing dependencies... for ${app}`);
-        
-        const npmI = runCommand(`cd ${app} && npm install`);
+        console.log(chalk.cyan.bold('→ create-sara-project') + " " + chalk.magenta.bold("git:(") + chalk.red.bold("main") + chalk.magenta.bold(")") + " " + "npm install");
+
+        // const npmI = runCommand(`cd ${app} && npm install`);
+        const npmI = runCommand(`cd ${TEST_DIR}/${app} && npm install`);
         if (!npmI) process.exit(-1);
-        
-        console.log('Preparing git hooks...')
-        
-        const npmPrepare = runCommand(`cd ${app} && npm run prepare`);
+
+        console.log(chalk.cyan.bold('→ create-sara-project') + " " + chalk.magenta.bold("git:(") + chalk.red.bold("main") + chalk.magenta.bold(")") + " " + "preparing dependencies...");
+
+        // const npmUni = runCommandNoLogs(`cd ${app} && npm uninstall fs-extra inquirer chalk`);
+        const npmUni = runCommandNoLogs(`cd ${TEST_DIR}/${app} && npm uninstall fs-extra inquirer chalk`);
+        if (!npmUni) process.exit(-1);
+
+        console.log(chalk.cyan.bold('→ create-sara-project') + " " + chalk.magenta.bold("git:(") + chalk.red.bold("main") + chalk.magenta.bold(")") + " " + "npm run prepare");
+
+        // const npmPrepare = runCommand(`cd ${app} && npm run prepare`);
+        const npmPrepare = runCommand(`cd ${TEST_DIR}/${app} && npm run prepare`);
         if (!npmPrepare) process.exit(-1);
 
+        // const gitAdd = runCommandNoLogs(`cd ${app} && git add .`);
+        const gitAdd = runCommandNoLogs(`cd ${TEST_DIR}/${app} && git add .`);
+        if (!gitAdd) process.exit(-1);
 
-        console.log(`Congratulations 🚀🚀🚀 You are ready! Follow the following commands to start:`);
-        console.log(`cd ${app}`);
-        console.log(`npm start`);
-    }).catch((error) => {
-        console.error("Error in create-sara-project");
-        console.error(error);
-    });
+        // const gitCommit = runCommandNoLogs(`cd ${app} && git commit -n -m "Initialize project using create-sara-project"`);
+        const gitCommit = runCommandNoLogs(`cd ${TEST_DIR}/${app} && git commit -n -m "Initialize project using create-sara-project"`);
+        if (!gitCommit) process.exit(-1);
+
+        console.log(chalk.blue.bold(`\nCongratulations 🚀🚀🚀 You are ready! Follow the following commands to start:`));
+        console.log(chalk.blue.bold(`\ncd ${app}`));
+        console.log(chalk.blue.bold(`npm start`));
+    } catch (error) {
+        console.error(chalk.red.bold("Error installing the app:", error));
+        process.exit(-1);
+    }
+}
+
+const run = async () => {
+    try {
+        const answers = await questions();
+        const app = await copyApp(answers);
+        await installApp(app);
+    } catch (error) {
+        console.error(chalk.red.bold("Error in create-sara-project:", error));
+        process.exit(-1);
+    }
+}
+run();

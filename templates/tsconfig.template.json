@@ -21,7 +21,6 @@
     "jsx": "react-jsx",
   },
   "include": [
-    "templates/src_v1",
-    "templates/src_v2"
+    "src"
   ]
 }
