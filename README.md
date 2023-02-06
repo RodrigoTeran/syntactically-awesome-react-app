@@ -24,7 +24,7 @@
 
 # Getting Started
 
-## Dependencies
+### Dependencies
 
 **NPM** is the project package manager.  
 
@@ -44,7 +44,7 @@ git@2.28.0
 
 If something is not working, try to update to these specific versions...
 
-## Update package
+### Update package
 If you have previously installed:
 ```
 npm i create-sara-project -g
@@ -55,22 +55,22 @@ and you want to update it, run:
 npm update create-sara-project -g
 ```
 # Commands
-## Install
+### Install
 Run the following command to install create-sara-project globally
 
 ```
 npm i create-sara-project -g
 ```
 
-## Then you can go to your project folder and run:
+### Then you can go to your project folder and run:
 
 ```
-create-sara-project --app=<app_name>
+create-sara-project
 ```
 
-if you don't specify the app name it is going to create it with the name "my-app"
+Once you run the command the app will ask you the app name and the template type...
 
-## Once you created a sara project...
+### Once you created a sara project...
 you can run the development server:
 
 ```
@@ -78,19 +78,19 @@ cd <app_name>
 npm start
 ```
 
-## Open cypress 
+### Open cypress 
 
 ```
 npm run cypress:open
 ```
 
-## Run cypress tests
+### Run cypress tests
 
 ```
 npm test
 ```
 
-## Build
+### Build
 
 ```
 npm run build
