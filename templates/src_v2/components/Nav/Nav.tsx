@@ -5,7 +5,7 @@ import { ReactComponent as LinkSvg } from '../../assets/icons/link.svg'
 const Nav: React.FunctionComponent = () => {
 	return (
 		<nav className="sticky top-0 left-0 w-screen h-20 flex px-10 items-center justify-between">
-			<div className="text-indigo-600 text-xl font-bold">SARA</div>
+			<div data-cy="title" className="text-indigo-600 text-xl font-bold">SARA</div>
 			<div className="flex gap-x-3 items-center justify-between">
 				<Button className="py-1 bg-slate-200 text-neutral-800 hover:bg-slate-100">Just a btn</Button>
 				<Button

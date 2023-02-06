@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import styles from './Index.module.css'
 import Logo from '../../assets/img/logo.png'
 import Button from '../../components/Button/Button'
-import { ROUTE_ABOUT } from '../../config/routes'
 import { ReactComponent as LinkSvg } from '../../assets/icons/link.svg'
 import { SECRETS } from '../../config/constants'
 
@@ -28,7 +27,7 @@ const IndexPage: React.FunctionComponent = () => {
 				<Button onClick={copy} className="rounded bg-slate-200 text-neutral-800 hover:bg-slate-100">
 					secret!!!
 				</Button>
-				<Button className="rounded flex items-center gap-x-3" isReactiveHref href={ROUTE_ABOUT}>
+				<Button className="rounded flex items-center gap-x-3" href="https://github.com/RodrigoTeran/syntactically-awesome-react-app">
 					<span className="whitespace-nowrap">Go to docs</span>
 					<LinkSvg className="fill-slate-100 w-3 h-3" />
 				</Button>
