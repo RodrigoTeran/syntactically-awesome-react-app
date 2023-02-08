@@ -102,7 +102,7 @@ Check the [./cypress](cypress) configuration folder.
 
 # Docker
 
-SARA uses **Docker** to containerize this app
+SARA uses **Docker** to containerize this app.
 Check the [Dockerfile](Dockerfile) configuration file.
 
 # Linters and Code Style
@@ -114,6 +114,11 @@ The mix of tools used to ensure code and commit style and best practices:
 - [Commitlint](https://github.com/conventional-changelog/commitlint)
 - Lint Staged
 - Husky
+
+# Examples
+### SARA project for Monorepos
+If you are building a monorepo, [here is an example](https://github.com/RodrigoTeran/test-monorepo-sara-project) of how to implement a monorepo with create-sara-project 🚀
+
 
 # Template structure 
 
